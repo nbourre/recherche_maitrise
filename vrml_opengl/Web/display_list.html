@@ -1,0 +1,318 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.5 [en] (WinNT; I) [Netscape]">
+   <title>CodeTools Article - OpenGL, WRL and MFC</title>
+<style type="text/css">
+<!--
+body {  font-family: Verdana, Arial, Helvetica, sans-serif; color: #000000; font-size: 11pt; background-color: #FFFFFF; }
+b    {  color: #0066FF}
+h1   {  font-size: 16pt; font-weight: 700; color: #000000; margin-top: 10px; margin-bottom: 10px}
+h2   {  font-size: 14pt; font-weight: 700; color: #0066FF; }
+h3   {  font-size: 12pt; font-weight: 700; color: #000000;}
+h6   {  font-weight: normal; color: #626262}
+pre  {  font-family: "Courier New", Courier, mono; color:#000000; background-color:#CCCCCC;}
+-->
+</style>
+</head>
+<body bgcolor="#FFFFFF" color="#000000">
+&nbsp;
+<table BORDER=0 CELLPADDING=3 WIDTH="95%" >
+<tr>
+<td COLSPAN="2">
+<center>
+<h1>
+A small VRML viewer&nbsp;</h1></center>
+
+<center>
+<h1>
+using OpenGL and MFC</h1></center>
+
+<center>
+<h4>
+<a href="mailto:pierre.alliez@cnet.francetelecom.fr">Pierre Alliez</a></h4></center>
+
+<center>
+<h4>
+&nbsp;</h4></center>
+</td>
+</tr>
+
+<tr>
+<td WIDTH="50%"><b>Environment</b>: VC6 SP2, NT4 SP5</td>
+
+<td WIDTH="50%"><b>Keywords</b>: OpenGL, WRL, GUI</td>
+</tr>
+</table>
+
+<p><img SRC="mnt.jpg" height=482 width=600>
+<p><i><font size=-1>FIG. 1. You can easily display a wrl-based terrain
+using OpenGL and MFC.</font></i>
+<br>&nbsp;
+<p>This contribution is a small MFC sample to learn how to :
+<ul>
+<li>
+display a VRML file</li>
+
+<li>
+use OpenGL display lists</li>
+
+<li>
+superimpose wireframe on a flat or smoothly shaded mesh</li>
+
+<li>
+smoothly subdivide a 3D triangular mesh (from Charles Loop)</li>
+
+<li>
+implement mouse interaction (rotation and translation)</li>
+
+<li>
+build a scene graph from a vrml 2.0 file (hand-made and not lex-based)</li>
+</ul>
+
+<h3>
+DISPLAY LIST</h3>
+Using display lists is a nice way to accelerate your rendering application.
+A display list compiles a sequence of gl drawings using standard OpenGL
+calls, then can be recalled later using a simple list id number. The resulting
+list is thus resident in the main memory in a precompilated mode, the which
+greatly accelerates rendering loops. A good command sequence to build a
+display list may be :
+<pre>int list = ::glGenLists(1); <font color="#009900">// ask for a free id number</font>&nbsp;
+::glNewList(list,GL_COMPILE_AND_EXECUTE);&nbsp;
+&nbsp; ::glBegin(GL_TRIANGLES);&nbsp;
+&nbsp; <font color="#009900">// std gl calls here... fill vertices, normals, colors</font>&nbsp;
+&nbsp; ::glEnd();&nbsp;
+::glEndList();</pre>
+A good command sequence to use a display list may be :
+<pre><font face="Courier New,Courier">if(::glIsList(list) == GL_TRUE)
+&nbsp; ::glCallList(m_ListOpenGL);</font></pre>
+The sample builds a scene graph from a vrml 2.0 file (exported via 3D Studio
+Max only), then uses display lists. Each 3D mesh contains a list number,
+and use a glCallList command instead of standards glBegin(GL_TRIANGLES)
+commands when its list is built. A flag m_Modified permits to rebuild the
+list when the mesh is modified.
+<pre><font face="Courier New,Courier"><font color="#009900">//********************************************&nbsp;
+// The 3D mesh class definition&nbsp;
+//********************************************&nbsp;
+</font>class CMesh3d : public CObject3d&nbsp;
+{&nbsp;
+private :&nbsp;
+
+&nbsp;// Std datas&nbsp;
+&nbsp;CArray&lt;CVertex3d> m_ArrayVertex;&nbsp;
+&nbsp;CArray&lt;CFace3d>&nbsp;&nbsp; m_ArrayFace;&nbsp;
+
+&nbsp;// OpenGL-specific&nbsp;
+&nbsp;unsigned int <b>m</b>_<b>ListOpenGL</b>;&nbsp;
+&nbsp;BOOL m_ListDone;&nbsp;
+&nbsp;BOOL m_Modified;&nbsp;
+&nbsp;.../...&nbsp;
+
+public :&nbsp;
+&nbsp;BOOL glDraw();&nbsp;
+&nbsp;.../...&nbsp;
+}&nbsp;
+
+<font color="#009900">//********************************************&nbsp;
+// Mesh drawing&nbsp;
+//********************************************&nbsp;
+</font>BOOL CMesh3d::glDraw()&nbsp;
+{&nbsp;
+&nbsp;// Build list at first&nbsp;
+&nbsp;if(!m_ListDone || m_Modified)&nbsp;
+&nbsp; glBuildList();&nbsp;
+
+&nbsp;// Is the list valid ?&nbsp;
+&nbsp;if(::glIsList(m_ListOpenGL)==GL_TRUE)&nbsp;
+&nbsp;{&nbsp;
+&nbsp;&nbsp; ::<b>glCallList</b>(m_ListOpenGL);&nbsp;
+&nbsp; return TRUE;&nbsp;
+&nbsp;}&nbsp;
+&nbsp;return FALSE;&nbsp;
+}</font></pre>
+
+<h3>
+SUPERIMPOSING WIREFRAME</h3>
+Sometime you would like to view the wireframe superimposing the flat or
+smooth shaded mesh. A good way to do this is to use the glPolygonOffset
+command, which creates a z-buffer offset. The following code shows the
+RenderScene function of the document, if one resumes two rendering passes
+are necessary, the first render the mesh using lighted flat mode, the second
+cut off the light, set the line mode, set a z-buffer offset, then draw
+the mesh again.
+<pre><font color="#009900">//***********************************************&nbsp;
+// RenderScene&nbsp;
+//***********************************************</font>&nbsp;
+void CMeshDoc::RenderScene()&nbsp;
+{&nbsp;
+&nbsp;// Main drawing&nbsp;
+&nbsp;m_SceneGraph.glDraw();&nbsp;
+
+&nbsp;// Add wireframe (no light, and line mode)&nbsp;
+&nbsp;if(m_AddWireframe)&nbsp;
+&nbsp;{&nbsp;
+&nbsp; // Set state&nbsp;
+&nbsp; ::glDisable(GL_LIGHTING);&nbsp;
+&nbsp; ::glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);&nbsp;
+&nbsp; ::glEnable(GL_POLYGON_OFFSET_LINE);&nbsp;
+&nbsp; ::<b>glPolygonOffset</b>(m_PolygonOffset,-1.0f);&nbsp;
+
+&nbsp; // Draw again...&nbsp;
+&nbsp; m_SceneGraph.glDraw(TYPE_MESH3D);&nbsp;
+
+&nbsp; // Restore light and mode&nbsp;
+&nbsp; ::glDisable(GL_POLYGON_OFFSET_LINE);&nbsp;
+&nbsp; ::glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);&nbsp;
+&nbsp; ::glEnable(GL_LIGHTING);&nbsp;
+&nbsp;}&nbsp;
+
+&nbsp;::glFlush();&nbsp;
+}</pre>
+
+<h3>
+<img SRC="superimp.jpg" height=454 width=600></h3>
+<i><font size=-1>FIG. 2. You can superimpose a wireframe on a flat-rendered
+mesh, using a second rendering loop with the line option.</font></i>
+<h3>
+</h3>
+
+<h3>
+SMOOTH SUBDIVISION</h3>
+From a given 3D mesh, how can we improve the geometric appearence on smooth
+models ? The Charles Loop smooth subdivision comes here to help us. Each
+triangle is divided in four triangles (see figure 3), and a filtering function
+permits the mesh to be smoothed. The command is easy-to-use in the document,
+and I let you discover the details in the mesh's code.
+<pre><img SRC="subdivision.jpg" height=191 width=600></pre>
+<i><font size=-1>FIG.3. The one-to-four triangle subdivision scheme used
+by method.</font></i>
+<pre><font color="#006600">//***********************************************&nbsp;
+// Smooth subdivision&nbsp;
+</font><font color="#009900">//***********************************************</font>&nbsp;
+void CMeshDoc::OnMeshLoop()&nbsp;
+{&nbsp;
+&nbsp;BeginWaitCursor();&nbsp;
+&nbsp;int NbObject = m_SceneGraph.NbObject();&nbsp;
+&nbsp;for(int i=0;i&lt;NbObject;i++)&nbsp;
+&nbsp;{&nbsp;
+&nbsp;&nbsp; CObject3d *pObject3d = m_SceneGraph[i];&nbsp;
+&nbsp;&nbsp; if(pObject3d->GetType() == TYPE_MESH3D)&nbsp;
+&nbsp; {&nbsp;
+&nbsp;&nbsp; CMesh3d *pMesh&nbsp; = (CMesh3d *)pObject3d;&nbsp;
+&nbsp;&nbsp; pMesh-><b>SubdivisionLoop</b>();&nbsp;
+&nbsp; }&nbsp;
+&nbsp;}&nbsp;
+&nbsp;UpdateAllViews(NULL);&nbsp;
+&nbsp;EndWaitCursor();&nbsp;
+}</pre>
+
+<h3>
+<img SRC="subd_mesh.jpg" height=414 width=600></h3>
+<i><font size=-1>FIG.4. Two successives iterations of one-to-four subdivision
+scheme.</font></i><i><font size=-1></font></i>
+<p><img SRC="subd_smooth.jpg" height=414 width=600><i><font size=-1></font></i>
+<p><i><font size=-1>FIG.5. See the visual enhancement obtained by a smooth
+subdivsion scheme..</font></i>
+<br><i><font size=-1></font></i>&nbsp;
+<h3>
+MOUSE INTERACTION</h3>
+A few variables and commands inserted in the view permit mouse interaction.
+<pre><font color="#009900">//***********************************************&nbsp;
+// Left button -> x/y translation&nbsp;
+//***********************************************&nbsp;
+</font>void CMeshView::OnLButtonDown(UINT nFlags, CPoint point)&nbsp;
+{&nbsp;
+&nbsp;m_LeftButtonDown = TRUE;&nbsp;
+&nbsp;m_LeftDownPos = point;&nbsp;
+&nbsp;SetCapture();&nbsp;
+&nbsp;CView::OnLButtonDown(nFlags, point);&nbsp;
+}&nbsp;
+void CMeshView::OnLButtonUp(UINT nFlags, CPoint point)&nbsp;
+{&nbsp;
+&nbsp;m_RightButtonDown = FALSE;&nbsp;
+&nbsp;m_LeftButtonDown = FALSE;&nbsp;
+&nbsp;ReleaseCapture();&nbsp;
+&nbsp;CView::OnLButtonUp(nFlags, point);&nbsp;
+}&nbsp;
+
+<font color="#009900">//***********************************************&nbsp;
+// Right button : z translation&nbsp;
+//***********************************************&nbsp;
+</font>void CMeshView::OnRButtonDown(UINT nFlags, CPoint point)&nbsp;
+{&nbsp;
+&nbsp;m_RightButtonDown = TRUE;&nbsp;
+&nbsp;m_RightDownPos = point;&nbsp;
+&nbsp;SetCapture();&nbsp;
+&nbsp;CView::OnRButtonDown(nFlags, point);&nbsp;
+}&nbsp;
+void CMeshView::OnRButtonUp(UINT nFlags, CPoint point)&nbsp;
+{&nbsp;
+&nbsp;m_RightButtonDown = FALSE;&nbsp;
+&nbsp;m_LeftButtonDown = FALSE;&nbsp;
+&nbsp;ReleaseCapture();&nbsp;
+&nbsp;CView::OnRButtonUp(nFlags, point);&nbsp;
+}&nbsp;
+
+<font color="#009900">//***********************************************&nbsp;
+// Mouse move&nbsp;
+// Both : rotation&nbsp;
+// Left : x / y translation&nbsp;
+// Right : z translation&nbsp;
+//***********************************************&nbsp;
+</font>void CMeshView::OnMouseMove(UINT nFlags, CPoint point)&nbsp;
+{&nbsp;
+&nbsp;// Both : rotation&nbsp;
+&nbsp;if(m_LeftButtonDown &amp;&amp; m_RightButtonDown)&nbsp;
+&nbsp;{&nbsp;
+&nbsp; if(m_xyRotation)&nbsp;
+&nbsp; {&nbsp;
+&nbsp;&nbsp; m_yRotation -= (float)(m_LeftDownPos.x - point.x) * m_SpeedRotation;&nbsp;
+&nbsp;&nbsp; m_xRotation -= (float)(m_LeftDownPos.y - point.y) * m_SpeedRotation;&nbsp;
+&nbsp; }&nbsp;
+&nbsp; else&nbsp;
+&nbsp; {&nbsp;
+&nbsp;&nbsp; m_zRotation -= (float)(m_LeftDownPos.x - point.x) * m_SpeedRotation;&nbsp;
+&nbsp;&nbsp; m_xRotation -= (float)(m_LeftDownPos.y - point.y) * m_SpeedRotation;&nbsp;
+&nbsp; }&nbsp;
+&nbsp; m_LeftDownPos = point;&nbsp;
+&nbsp; m_RightDownPos = point;&nbsp;
+&nbsp; InvalidateRect(NULL,FALSE);&nbsp;
+&nbsp;}&nbsp;
+
+&nbsp;else&nbsp;
+
+&nbsp;// Left : x / y translation&nbsp;
+&nbsp;if(m_LeftButtonDown)&nbsp;
+&nbsp;{&nbsp;
+&nbsp; m_xTranslation -= (float)(m_LeftDownPos.x - point.x) * m_SpeedTranslation;&nbsp;
+&nbsp; m_yTranslation += (float)(m_LeftDownPos.y - point.y) * m_SpeedTranslation;&nbsp;
+&nbsp; m_LeftDownPos = point;&nbsp;
+&nbsp; InvalidateRect(NULL,FALSE);&nbsp;
+&nbsp;}&nbsp;
+
+&nbsp;else&nbsp;
+
+&nbsp;// Right : z translation&nbsp;
+&nbsp;if(m_RightButtonDown)&nbsp;
+&nbsp;{&nbsp;
+&nbsp; m_zTranslation += (float)(m_RightDownPos.y - point.y) * m_SpeedTranslation;&nbsp;
+&nbsp; m_RightDownPos = point;&nbsp;
+&nbsp; InvalidateRect(NULL,FALSE);&nbsp;
+&nbsp;}&nbsp;
+
+&nbsp;CView::OnMouseMove(nFlags, point);&nbsp;
+}</pre>
+
+<h3>
+Downloads</h3>
+<a href="wrl_viewer.zip">Download demo project - 1000 Kb</a>
+<br>&nbsp;
+<h3>
+History</h3>
+Date Posted: November 15, 1999
+<br>Last Updated: November 15, 1999
+<br>&nbsp;
+</body>
+</html>

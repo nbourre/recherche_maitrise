@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cvblobslib", "cvblobslib.vcproj", "{F0BF4308-1820-4A23-A1B0-9028BC772563}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{F0BF4308-1820-4A23-A1B0-9028BC772563}.Debug.ActiveCfg = Debug|Win32
+		{F0BF4308-1820-4A23-A1B0-9028BC772563}.Debug.Build.0 = Debug|Win32
+		{F0BF4308-1820-4A23-A1B0-9028BC772563}.Release.ActiveCfg = Release|Win32
+		{F0BF4308-1820-4A23-A1B0-9028BC772563}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

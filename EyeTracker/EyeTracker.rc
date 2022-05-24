@@ -1,0 +1,251 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// French (France) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)
+#ifdef _WIN32
+LANGUAGE LANG_FRENCH, SUBLANG_FRENCH
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 235, 55
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "À propos de EyeTracker"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "EyeTracker Version 1.0",IDC_STATIC,40,10,119,8,
+                    SS_NOPREFIX
+    LTEXT           "Copyright (C) 2006",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,16,WS_GROUP
+END
+
+IDD_EYETRACKER_DIALOG DIALOGEX 0, 0, 274, 262
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "EyeTracker"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Open",IDC_btnOpenFile,50,7,50,14
+    EDITTEXT        IDC_txtMsg,142,185,108,15,ES_AUTOHSCROLL
+    LTEXT           "Message du système",IDC_STATIC,140,170,68,8
+    PUSHBUTTON      "Check for glints",IDC_checkGlint,50,42,70,14
+    PUSHBUTTON      "ThresholdImg",IDC_btnThreshold,14,171,50,14
+    EDITTEXT        IDC_txtThresholds,70,171,40,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Show Image",IDC_btnShowImg,14,189,50,14
+    PUSHBUTTON      "Show Video",IDC_btnShowVideo,50,24,50,14
+    LTEXT           " ",IDC_lblIVideoStatus,144,208,70,8
+    LTEXT           "Step 1",IDC_STATIC,7,7,36,14
+    LTEXT           "Step 2",IDC_STATIC,7,24,36,14
+    LTEXT           "Step 3",IDC_STATIC,7,42,36,14
+    GROUPBOX        "Test zone",IDC_STATIC,7,151,124,63
+    GROUPBOX        "Left informations",IDC_STATIC,7,71,125,75
+    GROUPBOX        "Right informations",IDC_STATIC,142,71,125,75
+    LTEXT           "Average position :",IDC_STATIC,14,87,60,8
+    LTEXT           "Number of frame counted :",IDC_STATIC,14,123,88,8
+    LTEXT           "Average position :",IDC_STATIC,148,87,60,8
+    LTEXT           "Number of frame counted :",IDC_STATIC,147,123,88,8
+    EDITTEXT        IDC_txtLeftAvg,101,80,24,14,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_txtRightAvg,234,80,24,14,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_txtRightNbFrames,234,121,24,14,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_txtLeftNbFrames,101,121,24,14,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    LTEXT           "x",IDC_STATIC,88,82,8,8
+    EDITTEXT        IDC_txtLeftAvgY,101,97,24,14,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    LTEXT           "y",IDC_STATIC,88,99,8,8
+    LTEXT           "x",IDC_STATIC,221,83,8,8
+    EDITTEXT        IDC_txtRightAvgY,234,98,24,14,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    LTEXT           "y",IDC_STATIC,221,100,8,8
+    CONTROL         "",IDC_SLIDER_THRESHOLD,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,133,22,100,15
+    EDITTEXT        IDC_TXT_TEST,151,47,40,14,ES_AUTOHSCROLL
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040c04e4"
+        BEGIN
+            VALUE "CompanyName", "TODO: <Nom de la société>"
+            VALUE "FileDescription", "TODO: <Description du fichier>"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "EyeTracker.exe"
+            VALUE "LegalCopyright", "TODO: (c) <Nom de la société>. Tous droits réservés."
+            VALUE "OriginalFilename", "EyeTracker.exe"
+            VALUE "ProductName", "TODO: <Nom du produit>"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x40c, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_EYETRACKER_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 267
+        VERTGUIDE, 14
+        VERTGUIDE, 125
+        VERTGUIDE, 258
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 255
+        HORZGUIDE, 80
+        HORZGUIDE, 121
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_ABOUTBOX            "&À propos de EyeTracker..."
+END
+
+#endif    // French (France) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// French (Canada) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRC)
+#ifdef _WIN32
+LANGUAGE LANG_FRENCH, SUBLANG_FRENCH_CANADIAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)\r\n"
+    "LANGUAGE 12, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#include ""res\\EyeTracker.rc2""  // ressources non modifiées par Microsoft Visual C++\r\n"
+    "#include ""afxres.rc""         // Composants standard\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\EyeTracker.ico"
+#endif    // French (Canada) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)
+LANGUAGE 12, 1
+#pragma code_page(1252)
+#include "res\EyeTracker.rc2"  // ressources non modifiées par Microsoft Visual C++
+#include "afxres.rc"         // Composants standard
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
