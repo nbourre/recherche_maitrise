@@ -1,4 +1,5 @@
 #include "Histogram.h"
+#include <opencv2/legacy/compat.hpp>
 
 CHistogram::CHistogram(void)
 {

@@ -24,7 +24,7 @@ MODIFICATIONS (Modification, Author, Date):
 //#define MATRIXCV_ACTIU
 
 #include <math.h>
-#include "cxcore.h"
+#include "opencv/cxcore.h"
 
 #ifdef MATRIXCV_ACTIU
 	#include "matrixCV.h"

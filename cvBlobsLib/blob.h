@@ -12,7 +12,7 @@ MODIFICATIONS (Modification, Author, Date):
 
 **************************************************************************/
 
-#include "cxcore.h"
+#include "opencv/cxcore.h"
 #include <functional>
 #include <vector>
 #include <algorithm>

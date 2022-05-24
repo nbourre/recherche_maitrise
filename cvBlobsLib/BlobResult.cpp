@@ -13,6 +13,7 @@ MODIFICACIONS (Modificació, Autor, Data):
 #include <algorithm>
 #include "BlobResult.h"
 #include "BlobExtraction.h"
+//#undef _DEBUG
 #ifdef _DEBUG
 	#include <afx.h>			//suport per a CStrings
 	#include <afxwin.h>			//suport per a AfxMessageBox

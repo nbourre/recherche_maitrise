@@ -1,4 +1,6 @@
 #include "EyeROI.h"
+#include <opencv2/legacy/compat.hpp>
+
 
 CEyeROI::CEyeROI(void)
 {

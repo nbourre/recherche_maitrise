@@ -1,7 +1,7 @@
-#include <cv.h>
-#include <highgui.h>
-#include <cxcore.h>
-#include <cvaux.h>
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
+#include <opencv/cxcore.h>
+#include <opencv/cvaux.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -11,7 +11,6 @@
 #include <vector>
 #include <sstream>  // Lib pour la conversion des strings
 #include <direct.h>
-#include <BlobResult.h>
 #include <math.h>
 
 #include "projection.h"
@@ -19,11 +18,13 @@
 #include "EyeROI.h"
 #include "Eyes.h"
 #include "Histogram.h"
+#include "../../../cvBlobsLib/BlobResult.h"
 
 using namespace std;
 
 #define MAXPIX 255
 #define THRESHEYEDIST 40.0
+#define MAX_PATH 255
 
 const int projectionSmooth = 15;
 const int runningAverageSize = 20;

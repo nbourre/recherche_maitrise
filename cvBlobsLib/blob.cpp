@@ -16,7 +16,7 @@ MODIFICATIONS (Modification, Author, Date):
 
 #include <limits.h>
 #include "blob.h"
-#include "cv.h"
+#include "opencv/cv.h"
 
 /**
 - FUNCIÓ: CBlob
